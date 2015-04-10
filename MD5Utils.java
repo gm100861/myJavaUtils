@@ -1,0 +1,65 @@
+package org.linuxsogood.misc;
+
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import org.junit.Test;
+/**
+* 用来生成32位的MD5密码,如果想要16位的,可以使用String的substring(8,24)即可获取
+*/
+public class MD5Utils {
+
+	public static String getMD5Value(String encstr) {
+		String result = null;
+		
+		// 用来将字节转换成 16 进制表示的字符
+		char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd','e', 'f' };
+
+		if (encstr != null) {
+			try {
+				// 返回实现指定摘要算法的 MessageDigest 对象
+				MessageDigest md = MessageDigest.getInstance("MD5");
+
+				// 使用utf-8编码将encstr字符串编码并保存到source字节数组
+				byte[] source = encstr.getBytes("utf-8");
+
+				// 使用指定的 byte 数组更新摘要
+				md.update(source);
+
+				// 通过执行诸如填充之类的最终操作完成哈希计算，结果是一个128位的长整数
+				byte[] tmp = md.digest();
+
+				// 用16进制数表示需要32位
+				char[] str = new char[32];
+
+				for (int i = 0, j = 0; i < 16; i++) {
+
+					// j表示转换结果中对应的字符位置
+					// 从第一个字节开始，对 MD5 的每一个字节
+					// 转换成 16 进制字符
+					byte b = tmp[i];
+
+					// 取字节中高 4 位的数字转换
+					// 无符号右移运算符>>> ，它总是在左边补0
+					// 0x代表它后面的是十六进制的数字. f转换成十进制就是15
+					str[j++] = hexDigits[b >>> 4 & 0xf];
+
+					// 取字节中低 4 位的数字转换
+					str[j++] = hexDigits[b & 0xf];
+				}
+
+				result = new String(str);// 结果转换成字符串用于返回
+
+			} catch (NoSuchAlgorithmException e) {
+				// 当请求特定的加密算法而它在该环境中不可用时抛出此异常
+				e.printStackTrace();
+
+			} catch (UnsupportedEncodingException e) {
+				// 不支持字符编码异常
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+}
