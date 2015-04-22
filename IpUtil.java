@@ -1,3 +1,4 @@
+import javax.servlet.http.HttpServletRequest;
 public class IpUtil {
 	
 	/**
