@@ -8,6 +8,20 @@ import java.util.regex.Pattern;
  */
 public class RegexTool {
 
+    public static void main(String[] args) {
+        String str = "<iframe height=498 width=510 src=\"http://player.youku.com/embed/XMjE4MTY4MDE2\" frameborder=0 allowfullscreen></iframe>";
+        regTest(str);
+    }
+
+    private static void regTest(String str) {
+        String regEx = "(?:src=[\"|\'])(.+)(?=[\"|\'])";
+        Pattern pat = Pattern.compile(regEx);
+        Matcher mat = pat.matcher(str);
+        while(mat.find()){
+            System.out.println(mat.group(1));
+        }
+    }
+
     public static List<String> getResult(String src, String regex) {
         ArrayList<String> result = new ArrayList<String>();
         Pattern pattern = Pattern.compile(regex);
